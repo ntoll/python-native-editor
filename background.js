@@ -10,6 +10,14 @@ chrome.app.runtime.onLaunched.addListener(function(launchData) {
     {
       id: 'mainWindow',
       bounds: {width: 800, height: 600}
+    },
+    function(win) {
+      win.contentWindow.AddConnectedSerialId = function(id) {
+        connectedSerialId = id;
+      };
+      win.onClosed.addListener(function() {
+        chrome.serial.disconnect(connectedSerialId, function(){});
+      });
     }
   );
 });

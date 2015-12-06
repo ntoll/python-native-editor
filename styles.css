@@ -9,6 +9,33 @@
     font-size: 22px;
 }
 
+#repl {
+    height: 40%;
+    border-top: 2px solid #F2F2F2;A
+    width: 100%;
+    min-width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 1px;
+}
+
+#terminal {
+    background: black;
+    color: #CCC;
+    display: block;
+}
+
+#update-notification {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    font-size: 20px;
+    background-color: orange;
+    color: white;
+    opacity: 0.9;
+    cursor: pointer;
+}
+
 /* Re-usable, generic rules */
 .hidden {
   display: none !important;
@@ -150,7 +177,7 @@ body, input {
   margin-bottom: 0;
   text-align: center;
   font-size: 2.6rem;
-  line-height: 3.8rem;
+  line-height: 4.2rem;
   padding: .1em;
   font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Symbola", sans-serif;
   color: #336699;
@@ -174,39 +201,6 @@ a.command, a.command:visited {
 
 a.command:hover {
   text-decoration: underline;
-}
-
-/* Some overrides for narrow displays */
-@media (max-width: 890px) {
-  .roundbutton {
-    display: inline;
-    padding: 0.75em;
-  }
-
-  .roundsymbol {
-    width: 2rem;
-    height: 2rem;
-    line-height: 2.05rem;
-    font-size: 1.3rem;
-    margin: 0;
-  }
-
-  .roundlabel {
-    padding-top: 0;
-    display: none;
-  }
-
-
-  #script-name {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  #toolbox {
-    flex-direction: column;
-    -ms-flex-direction: column;
-  }
 }
 
 .snippet-selection:hover {

@@ -15,5 +15,13 @@
     "background": {
       "scripts": ["background.js"]
     }
-  }
+  },
+  
+  "permissions": [
+    "storage",
+    "serial",
+    { 
+      "fileSystem": ["write", "retainEntries", "directory", "requestFileSystem"]
+    }
+  ]
 }
