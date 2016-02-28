@@ -137,6 +137,10 @@ function editorUI() {
     
     // A flag indicating unsaved changes in the editor.
     var dirty = false;
+    
+    // A reference to the Google drive of the current user. We use this to
+    // store their MicroPython scripts "in the cloud".
+    var drive = null;
   
     // On your marks, get set...
     function go() {
@@ -213,7 +217,7 @@ function editorUI() {
           });
         } else {
           microbitDirectory = null;
-          displayMessage('Unable to write to micro:bit. Have you got it plugged in?');
+          displayMessage('Error', 'Unable to write to micro:bit. Have you got it plugged in?');
         }
       });
     }
@@ -221,15 +225,22 @@ function editorUI() {
     // Loads a Python script (the referenced file_entry) and loads it into the
     // editor.
     function loadFile(file_entry) {
-      
+      file_entry.file(function(file) {
+         var reader = new FileReader();
+         reader.onloadend = function(e) {
+           EDITOR.setCode(this.result);
+         };
+         reader.readAsText(file);
+       }, function(error) {console.log(error);});
     }
     
     // Display a message to the end user.
-    function displayMessage(message) {
+    function displayMessage(label, message) {
+      console.log(label);
       console.log(message);
       var template = $('#message-template').html();
       vex.open({
-          content: Mustache.render(template, {text: message})
+          content: Mustache.render(template, {label: label, text: message})
       });
     }
 
@@ -245,13 +256,28 @@ function editorUI() {
                 dirty = true;
             });
         }, 1);
+        // Sync up with the user's Google Drive...
+        chrome.syncFileSystem.requestFileSystem(function (fs) {
+          console.log('Connected to Google Drive.');
+          drive = fs;
+        });
+        // Bind the ESCAPE key.
+        $(document).keyup(function(e) {
+            if (e.keyCode == 27) { // ESCAPE
+                $('#command-new').focus();
+            }
+        });
+        // Focus on the element with TAB-STATE=1
+        $("#command-new").focus();
     }
     
     // Describes how to create a new Python script.
     function doNew() {
       if(dirty) {
-      
+        displayMessage('Warning', 'You have unsaved work. Please save before continuing.');
       } else {
+        EDITOR.setCode("from microbit import *\n\n# Type your Python code here. For example...\ndisplay.scroll(\"Hello, World!\")");
+        dirty = false;
         
       }
     }
@@ -263,7 +289,7 @@ function editorUI() {
     
     // Defines the process of saving a script to the filesystem.
     function doSave() {
-      
+      dirty = false;
     }
 
     // This function describes what to do when the snippets button is clicked.
@@ -308,7 +334,7 @@ function editorUI() {
           microbitDirectory = entry;
           copyToMicroBit(entry);
         } else {
-          displayMessage('Unable to open directory.');
+          displayMessage('Error', 'Unable to open directory.');
         }
       };
       chrome.fileSystem.chooseEntry({type: 'openDirectory'}, handler);
@@ -320,6 +346,12 @@ function editorUI() {
     function doREPL() {
       $('#repl').toggle(); // display on/off
       $('#repl-frame').attr('src', 'repl.html');
+    }
+    
+    // Starts the introJs help system to give the user a walk-through of the
+    // editor's functionality.
+    function doHelp() {
+      introJs().start();
     }
 
     // Join up the buttons in the user interface with some functions for 
@@ -342,6 +374,9 @@ function editorUI() {
         });
         $('#command-repl').click(function() {
             doREPL();
+        });
+        $('#command-help').click(function() {
+          doHelp();
         });
         $("#zoom-in").click(function (e) {
             e.stopPropagation();

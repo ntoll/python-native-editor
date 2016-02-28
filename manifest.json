@@ -18,8 +18,9 @@
   },
   
   "permissions": [
-    "storage",
+    "fileSystem",
     "serial",
+    "syncFileSystem",
     { 
       "fileSystem": ["write", "retainEntries", "directory", "requestFileSystem"]
     }

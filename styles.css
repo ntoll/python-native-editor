@@ -142,6 +142,10 @@ body, input {
   background-repeat: no-repeat;
 }
 
+#script-icons .holder:focus, #script-icons #holder:active {
+  background-image: url("assets/triangle2.svg");
+}
+
 /* Toolbox and commands */
 
 #commands a {
@@ -182,6 +186,10 @@ body, input {
   font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Symbola", sans-serif;
   color: #336699;
   background: #FFFFFF;
+}
+
+.roundbutton:focus, .roundbutton:active {
+  background-image: url("assets/triangle2.svg");
 }
 
 .roundlabel {
